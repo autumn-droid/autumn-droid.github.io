@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Đang chuyển hướng...</title>
 
-  <!-- ── THAY ĐỔI URL ĐÍCH TẠI ĐÂY ── -->
-  <meta http-equiv="refresh" content="5;url=https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9" />
-  <!-- ─────────────────────────────── -->
+  <!-- Meta refresh được gán động bởi JS bên dưới -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -228,14 +226,37 @@
   </div>
 
   <script>
-    // ── CẤU HÌNH ──────────────────────────────────────────────────
-    const TARGET_URL = "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9";   // ← Thay URL đích tại đây
-    const SECONDS    = 5;                        // ← Số giây đếm ngược
+    // ── BẢNG REDIRECT ─────────────────────────────────────────────
+    // Thêm hoặc chỉnh sửa các key tại đây
+    const REDIRECT_MAP = {
+      "ekyc":  "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9",
+      "email": "https://dev-link.dinhcunuocngoai.com.vn/email-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9",
+    };
+
+    const SECONDS     = 5;
+    const FALLBACK    = "https://autumn-droid.github.io/";   // Không có param hợp lệ
     // ──────────────────────────────────────────────────────────────
 
-    // Cập nhật UI theo URL đích
+    // Đọc ?redirect=xxx
+    const params      = new URLSearchParams(window.location.search);
+    const key         = (params.get("redirect") || "").toLowerCase();
+    const TARGET_URL  = REDIRECT_MAP[key] || FALLBACK;
+
+    // Gán meta refresh động (backup khi JS chậm)
+    const meta = document.createElement("meta");
+    meta.httpEquiv = "refresh";
+    meta.content   = `${SECONDS};url=${TARGET_URL}`;
+    document.head.appendChild(meta);
+
+    // Cập nhật UI
     document.getElementById("destUrl").textContent = TARGET_URL;
     document.getElementById("goBtn").href = TARGET_URL;
+
+    // Cập nhật tiêu đề theo loại redirect
+    const labels = { ekyc: "eKYC", email: "Email" };
+    if (labels[key]) {
+      document.querySelector("h1").textContent = `Đang chuyển hướng ${labels[key]}…`;
+    }
 
     // Đếm ngược
     let remaining = SECONDS;
