@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đang chuyển hướng...</title>
+
+  <!-- ── THAY ĐỔI URL ĐÍCH TẠI ĐÂY ── -->
+  <meta http-equiv="refresh" content="5;url=https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9" />
+  <!-- ─────────────────────────────── -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:        #0a0a0f;
+      --surface:   #13131c;
+      --border:    rgba(255,255,255,0.08);
+      --accent:    #5b8def;
+      --accent2:   #a78bfa;
+      --text:      #e8e8f0;
+      --muted:     #6b6b80;
+      --radius:    18px;
+      --duration:  5;           /* seconds — keep in sync with JS & meta refresh */
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(91,141,239,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,141,239,.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% -10%, rgba(91,141,239,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 80% 80%, rgba(167,139,250,.12) 0%, transparent 60%);
+    }
+
+    /* ── CARD ── */
+    .card {
+      position: relative; z-index: 1;
+      width: min(460px, 92vw);
+      margin: 0 auto;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 44px 40px 40px;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.04),
+        0 24px 64px rgba(0,0,0,.5),
+        0 0 80px rgba(91,141,239,.07);
+      animation: fadeUp .6s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(calc(-50% + 28px)); }
+      to   { opacity: 1; transform: translateY(-50%); }
+    }
+
+    /* ── ICON ── */
+    .icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(91,141,239,.22), rgba(167,139,250,.18));
+      border: 1px solid rgba(91,141,239,.35);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(91,141,239,.4); }
+      50%      { box-shadow: 0 0 0 12px rgba(91,141,239,0); }
+    }
+    .icon-wrap svg { width: 28px; height: 28px; }
+
+    /* ── TEXT ── */
+    h1 {
+      font-size: 1.45rem; font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: .95rem; color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 34px;
+    }
+    .destination {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: .78rem;
+      background: rgba(91,141,239,.1);
+      border: 1px solid rgba(91,141,239,.25);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: var(--accent);
+      word-break: break-all;
+      margin-bottom: 34px;
+    }
+    .destination svg { flex-shrink: 0; }
+
+    /* ── PROGRESS RING ── */
+    .ring-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      margin-bottom: 32px;
+    }
+    .ring-label {
+      font-size: .82rem; color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .ring-label span {
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--text);
+      display: block;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    svg.ring { transform: rotate(-90deg); overflow: visible; }
+    .ring-track { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 5; }
+    .ring-fill  {
+      fill: none;
+      stroke: url(#ringGrad);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 251.2;       /* 2π × 40 */
+      stroke-dashoffset: 0;
+      animation: countdown calc(var(--duration) * 1s) linear forwards;
+    }
+    @keyframes countdown {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: 251.2; }
+    }
+
+    /* ── BUTTON ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 26px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .92rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: opacity .2s, transform .15s;
+      box-shadow: 0 4px 20px rgba(91,141,239,.35);
+    }
+    .btn:hover  { opacity: .9; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* ── FOOTER NOTE ── */
+    .note {
+      margin-top: 24px;
+      font-size: .78rem; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="card">
+    <!-- Icon -->
+    <div class="icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5b8def"/>
+            <stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+        </defs>
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+
+    <h1>Đang chuyển hướng…</h1>
+    <p class="subtitle">Bạn sẽ được chuyển đến trang đích trong giây lát.<br/>Vui lòng chờ hoặc nhấn nút bên dưới.</p>
+
+    <!-- Destination badge -->
+    <div class="destination">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <span id="destUrl">https://example.com</span>
+    </div>
+
+    <!-- Countdown ring -->
+    <div class="ring-wrap">
+      <svg class="ring" width="88" height="88" viewBox="0 0 88 88">
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5b8def"/>
+            <stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-track" cx="44" cy="44" r="40"/>
+        <circle class="ring-fill"  cx="44" cy="44" r="40"/>
+      </svg>
+      <div class="ring-label">
+        <span id="counter">5</span>
+        giây còn lại
+      </div>
+    </div>
+
+    <!-- Manual redirect button -->
+    <a id="goBtn" href="https://example.com" class="btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Đi ngay
+    </a>
+
+    <p class="note">Nếu không tự chuyển, hãy nhấn nút phía trên.</p>
+  </div>
+
+  <script>
+    // ── CẤU HÌNH ──────────────────────────────────────────────────
+    const TARGET_URL = "https://example.com";   // ← Thay URL đích tại đây
+    const SECONDS    = 5;                        // ← Số giây đếm ngược
+    // ──────────────────────────────────────────────────────────────
+
+    // Cập nhật UI theo URL đích
+    document.getElementById("destUrl").textContent = TARGET_URL;
+    document.getElementById("goBtn").href = TARGET_URL;
+
+    // Đếm ngược
+    let remaining = SECONDS;
+    const counter = document.getElementById("counter");
+
+    const tick = setInterval(() => {
+      remaining--;
+      counter.textContent = remaining;
+      if (remaining <= 0) {
+        clearInterval(tick);
+        window.location.href = TARGET_URL;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
