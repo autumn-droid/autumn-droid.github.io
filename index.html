@@ -227,20 +227,32 @@
 
   <script>
     // ── BẢNG REDIRECT ─────────────────────────────────────────────
-    // Thêm hoặc chỉnh sửa các key tại đây
+    // Chỉ lưu base URL, các param sẽ được ghép động từ URL truy cập
     const REDIRECT_MAP = {
-      "ekyc":  "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9",
-      "email": "https://dev-link.dinhcunuocngoai.com.vn/email-redirect?status=success&user_id=d4cc89d5-6271-4f81-bb6c-90847d14cdf9",
+      "ekyc":  "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect",
+      "email": "https://dev-link.dinhcunuocngoai.com.vn/email-redirect",
     };
 
-    const SECONDS     = 5;
-    const FALLBACK    = "https://autumn-droid.github.io/";   // Không có param hợp lệ
+    const SECONDS  = 5;
+    const FALLBACK = "https://autumn-droid.github.io/";   // Không có param hợp lệ
     // ──────────────────────────────────────────────────────────────
 
-    // Đọc ?redirect=xxx
-    const params      = new URLSearchParams(window.location.search);
-    const key         = (params.get("redirect") || "").toLowerCase();
-    const TARGET_URL  = REDIRECT_MAP[key] || FALLBACK;
+    // Đọc các param từ URL hiện tại
+    // Ví dụ: ?redirect=ekyc&status=success&user_id=xxx
+    const params  = new URLSearchParams(window.location.search);
+    const key     = (params.get("redirect") || "").toLowerCase();
+    const status  = params.get("status");
+    const user_id = params.get("user_id");
+
+    // Ghép URL đích + forward các param (status, user_id) nếu có
+    let TARGET_URL = FALLBACK;
+    if (REDIRECT_MAP[key]) {
+      const destParams = new URLSearchParams();
+      if (status)  destParams.set("status",  status);
+      if (user_id) destParams.set("user_id", user_id);
+      const qs = destParams.toString();
+      TARGET_URL = REDIRECT_MAP[key] + (qs ? "?" + qs : "");
+    }
 
     // Gán meta refresh động (backup khi JS chậm)
     const meta = document.createElement("meta");
