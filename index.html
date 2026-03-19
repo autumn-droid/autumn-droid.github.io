@@ -12,148 +12,243 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
   <style>
-    :root {
-      --bg:        #0a0a0f;
-      --surface:   #13131c;
-      --border:    rgba(255,255,255,0.08);
-      --accent:    #5b8def;
-      --accent2:   #a78bfa;
-      --text:      #e8e8f0;
-      --muted:     #6b6b80;
-      --radius:    18px;
-      --duration:  5;           /* seconds — keep in sync with JS & meta refresh */
-    }
+    /* Không dùng CSS custom properties (var) để tương thích Android 7 / Chrome 58 */
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     html, body {
       height: 100%;
-      background: var(--bg);
-      color: var(--text);
+      background: #0a0a0f;
+      color: #e8e8f0;
       font-family: 'Be Vietnam Pro', sans-serif;
       overflow: hidden;
     }
 
     /* ── BACKGROUND ── */
     .bg-grid {
-      position: fixed; inset: 0; z-index: 0;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      background-image:
+        -webkit-linear-gradient(rgba(91,141,239,.05) 1px, transparent 1px),
+        -webkit-linear-gradient(left, rgba(91,141,239,.05) 1px, transparent 1px);
       background-image:
         linear-gradient(rgba(91,141,239,.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(91,141,239,.05) 1px, transparent 1px);
       background-size: 48px 48px;
     }
+
     .bg-glow {
-      position: fixed; inset: 0; z-index: 0;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      background:
+        -webkit-radial-gradient(50% -10%, ellipse cover, rgba(91,141,239,.18) 0%, transparent 70%),
+        -webkit-radial-gradient(80% 80%, ellipse cover, rgba(167,139,250,.12) 0%, transparent 60%);
       background:
         radial-gradient(ellipse 70% 55% at 50% -10%, rgba(91,141,239,.18) 0%, transparent 70%),
         radial-gradient(ellipse 40% 35% at 80% 80%, rgba(167,139,250,.12) 0%, transparent 60%);
     }
 
+    /* ── WRAPPER ── */
+    .center-wrap {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
     /* ── CARD ── */
     .card {
-      position: relative; z-index: 1;
-      width: min(460px, 92vw);
-      margin: 0 auto;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      width: 100%;
+      max-width: 460px;
+      background: #13131c;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
       padding: 44px 40px 40px;
       text-align: center;
+      -webkit-box-shadow:
+        0 0 0 1px rgba(255,255,255,.04),
+        0 24px 64px rgba(0,0,0,.5),
+        0 0 80px rgba(91,141,239,.07);
       box-shadow:
         0 0 0 1px rgba(255,255,255,.04),
         0 24px 64px rgba(0,0,0,.5),
         0 0 80px rgba(91,141,239,.07);
+      -webkit-animation: fadeUp .6s cubic-bezier(.22,1,.36,1) both;
       animation: fadeUp .6s cubic-bezier(.22,1,.36,1) both;
     }
 
+    @-webkit-keyframes fadeUp {
+      from { opacity: 0; -webkit-transform: translateY(28px); transform: translateY(28px); }
+      to   { opacity: 1; -webkit-transform: translateY(0);    transform: translateY(0); }
+    }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(calc(-50% + 28px)); }
-      to   { opacity: 1; transform: translateY(-50%); }
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ── ICON ── */
     .icon-wrap {
-      width: 64px; height: 64px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
+      background: -webkit-linear-gradient(135deg, rgba(91,141,239,.22), rgba(167,139,250,.18));
       background: linear-gradient(135deg, rgba(91,141,239,.22), rgba(167,139,250,.18));
       border: 1px solid rgba(91,141,239,.35);
-      display: flex; align-items: center; justify-content: center;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
       margin: 0 auto 28px;
+      -webkit-animation: pulse 2.4s ease-in-out infinite;
       animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @-webkit-keyframes pulse {
+      0%,100% { -webkit-box-shadow: 0 0 0 0 rgba(91,141,239,.4); box-shadow: 0 0 0 0 rgba(91,141,239,.4); }
+      50%      { -webkit-box-shadow: 0 0 0 12px rgba(91,141,239,0); box-shadow: 0 0 0 12px rgba(91,141,239,0); }
     }
     @keyframes pulse {
       0%,100% { box-shadow: 0 0 0 0 rgba(91,141,239,.4); }
       50%      { box-shadow: 0 0 0 12px rgba(91,141,239,0); }
     }
+
     .icon-wrap svg { width: 28px; height: 28px; }
 
     /* ── OS BADGE ── */
     .os-badge {
-      font-size: .78rem; font-weight: 600;
+      display: none;
+      font-size: 12px;
+      font-weight: 600;
       padding: 4px 12px;
       border-radius: 20px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
-      color: var(--muted);
+      color: #6b6b80;
       margin-bottom: 20px;
       letter-spacing: .03em;
     }
 
     /* ── TEXT ── */
     h1 {
-      font-size: 1.45rem; font-weight: 700;
+      font-size: 22px;
+      font-weight: 700;
       letter-spacing: -.02em;
       margin-bottom: 10px;
+      color: #e8e8f0;
     }
+
     .subtitle {
-      font-size: .95rem; color: var(--muted);
+      font-size: 15px;
+      color: #6b6b80;
       line-height: 1.6;
       margin-bottom: 34px;
     }
+
     .destination {
-      display: inline-flex; align-items: center; gap: 6px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
       font-family: 'Space Mono', monospace;
-      font-size: .78rem;
+      font-size: 12px;
       background: rgba(91,141,239,.1);
       border: 1px solid rgba(91,141,239,.25);
       border-radius: 8px;
       padding: 6px 14px;
-      color: var(--accent);
+      color: #5b8def;
       word-break: break-all;
       margin-bottom: 34px;
     }
-    .destination svg { flex-shrink: 0; }
+
+    .destination svg {
+      -webkit-flex-shrink: 0;
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
 
     /* ── PROGRESS RING ── */
     .ring-wrap {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 14px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
       margin-bottom: 32px;
     }
+
     .ring-label {
-      font-size: .82rem; color: var(--muted);
+      font-size: 13px;
+      color: #6b6b80;
       font-family: 'Space Mono', monospace;
+      margin-top: 14px;
     }
+
     .ring-label span {
-      font-size: 1.6rem; font-weight: 700;
-      color: var(--text);
+      font-size: 26px;
+      font-weight: 700;
+      color: #e8e8f0;
       display: block;
       line-height: 1;
       margin-bottom: 2px;
     }
 
-    svg.ring { transform: rotate(-90deg); overflow: visible; }
-    .ring-track { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 5; }
-    .ring-fill  {
+    svg.ring {
+      -webkit-transform: rotate(-90deg);
+      transform: rotate(-90deg);
+      overflow: visible;
+    }
+
+    .ring-track {
+      fill: none;
+      stroke: rgba(255,255,255,.07);
+      stroke-width: 5;
+    }
+
+    .ring-fill {
       fill: none;
       stroke: url(#ringGrad);
       stroke-width: 5;
       stroke-linecap: round;
-      stroke-dasharray: 251.2;       /* 2π × 40 */
+      stroke-dasharray: 251.2;
       stroke-dashoffset: 0;
-      animation: countdown calc(var(--duration) * 1s) linear forwards;
+      -webkit-animation: countdown 5s linear forwards;
+      animation: countdown 5s linear forwards;
+    }
+
+    @-webkit-keyframes countdown {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: 251.2; }
     }
     @keyframes countdown {
       from { stroke-dashoffset: 0; }
@@ -162,24 +257,37 @@
 
     /* ── BUTTON ── */
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: -webkit-inline-box;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
       padding: 12px 26px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      background: -webkit-linear-gradient(135deg, #5b8def, #a78bfa);
+      background: linear-gradient(135deg, #5b8def, #a78bfa);
       color: #fff;
-      border: none; border-radius: 10px;
+      border: none;
+      border-radius: 10px;
       font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: .92rem; font-weight: 600;
-      cursor: pointer; text-decoration: none;
-      transition: opacity .2s, transform .15s;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      -webkit-transition: opacity .2s;
+      transition: opacity .2s;
+      -webkit-box-shadow: 0 4px 20px rgba(91,141,239,.35);
       box-shadow: 0 4px 20px rgba(91,141,239,.35);
     }
-    .btn:hover  { opacity: .9; transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
+
+    .btn svg { margin-right: 8px; }
+    .btn:active { opacity: .85; }
 
     /* ── FOOTER NOTE ── */
     .note {
       margin-top: 24px;
-      font-size: .78rem; color: var(--muted);
+      font-size: 12px;
+      color: #6b6b80;
     }
   </style>
 </head>
@@ -187,137 +295,153 @@
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
 
-  <div class="card">
-    <!-- Icon -->
-    <div class="icon-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <defs>
-          <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#5b8def"/>
-            <stop offset="100%" stop-color="#a78bfa"/>
-          </linearGradient>
-        </defs>
-        <path d="M5 12h14M12 5l7 7-7 7"/>
-      </svg>
-    </div>
+  <div class="center-wrap">
+    <div class="card">
 
-    <h1>Đang chuyển hướng…</h1>
-    <p class="subtitle">Bạn sẽ được chuyển đến trang đích trong giây lát.<br/>Vui lòng chờ hoặc nhấn nút bên dưới.</p>
-
-    <!-- OS Badge -->
-    <div id="osBadge" class="os-badge" style="display:none"></div>
-
-    <!-- Destination badge -->
-    <div class="destination">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      <span id="destUrl">https://example.com</span>
-    </div>
-
-    <!-- Countdown ring -->
-    <div class="ring-wrap">
-      <svg class="ring" width="88" height="88" viewBox="0 0 88 88">
-        <defs>
-          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#5b8def"/>
-            <stop offset="100%" stop-color="#a78bfa"/>
-          </linearGradient>
-        </defs>
-        <circle class="ring-track" cx="44" cy="44" r="40"/>
-        <circle class="ring-fill"  cx="44" cy="44" r="40"/>
-      </svg>
-      <div class="ring-label">
-        <span id="counter">5</span>
-        giây còn lại
+      <!-- Icon -->
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5b8def"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
       </div>
+
+      <h1 id="pageTitle">Đang chuyển hướng…</h1>
+      <p class="subtitle">Bạn sẽ được chuyển đến trang đích trong giây lát.<br/>Vui lòng chờ hoặc nhấn nút bên dưới.</p>
+
+      <!-- OS Badge -->
+      <div id="osBadge" class="os-badge"></div>
+
+      <!-- Destination -->
+      <div class="destination">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+        <span id="destUrl">...</span>
+      </div>
+
+      <!-- Countdown ring -->
+      <div class="ring-wrap">
+        <svg class="ring" width="88" height="88" viewBox="0 0 88 88">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5b8def"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="44" cy="44" r="40"/>
+          <circle class="ring-fill"  cx="44" cy="44" r="40"/>
+        </svg>
+        <div class="ring-label">
+          <span id="counter">5</span>
+          giây còn lại
+        </div>
+      </div>
+
+      <!-- Manual redirect button -->
+      <a id="goBtn" href="#" class="btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        Đi ngay
+      </a>
+
+      <p class="note">Nếu không tự chuyển, hãy nhấn nút phía trên.</p>
+
     </div>
-
-    <!-- Manual redirect button -->
-    <a id="goBtn" href="https://example.com" class="btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Đi ngay
-    </a>
-
-    <p class="note">Nếu không tự chuyển, hãy nhấn nút phía trên.</p>
   </div>
 
   <script>
     // ── BẢNG REDIRECT ─────────────────────────────────────────────
-    // Base URL riêng cho từng OS
-    const REDIRECT_MAP = {
+    var REDIRECT_MAP = {
       "ekyc": {
         android: "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect",
-        ios:     "myapp:///kyc-redirect",
+        ios:     "myapp:///kyc-redirect"
       },
       "email": {
         android: "https://dev-link.dinhcunuocngoai.com.vn/email-redirect",
-        ios:     "myapp:///email-redirect",
-      },
+        ios:     "myapp:///email-redirect"
+      }
     };
 
-    const SECONDS  = 5;
-    const FALLBACK = "https://autumn-droid.github.io/";   // Không có param hợp lệ
+    var SECONDS  = 5;
+    var FALLBACK = "https://autumn-droid.github.io/";
     // ──────────────────────────────────────────────────────────────
 
     // ── DETECT OS ─────────────────────────────────────────────────
-    const ua = navigator.userAgent || "";
-    const isIOS     = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    const isAndroid = /Android/.test(ua);
-    const os        = isIOS ? "ios" : "android";   // mặc định android cho các OS khác
+    var ua        = navigator.userAgent || "";
+    var isIOS     = (/iPad|iPhone|iPod/.test(ua)) && !window.MSStream;
+    var isAndroid = /Android/.test(ua);
+    var os        = isIOS ? "ios" : "android";
     // ──────────────────────────────────────────────────────────────
 
-    // Đọc các param từ URL hiện tại
-    // Ví dụ: ?redirect=ekyc&status=success&user_id=xxx
-    const params  = new URLSearchParams(window.location.search);
-    const key     = (params.get("redirect") || "").toLowerCase();
-    const status  = params.get("status");
-    const user_id = params.get("user_id");
+    // ── ĐỌC PARAMS (không dùng URLSearchParams — Android 7 WebView có thể thiếu) ──
+    function getParam(name) {
+      var match = window.location.search.match(
+        new RegExp("[?&]" + name + "=([^&]*)")
+      );
+      return match ? decodeURIComponent(match[1].replace(/\+/g, " ")) : null;
+    }
 
-    // Ghép URL đích theo OS + forward param (status, user_id) nếu có
-    let TARGET_URL = FALLBACK;
+    var key     = (getParam("redirect") || "").toLowerCase();
+    var status  = getParam("status");
+    var user_id = getParam("user_id");
+    // ──────────────────────────────────────────────────────────────
+
+    // ── BUILD TARGET URL ──────────────────────────────────────────
+    var TARGET_URL = FALLBACK;
     if (REDIRECT_MAP[key]) {
-      const baseUrl    = REDIRECT_MAP[key][os];
-      const destParams = new URLSearchParams();
-      if (status)  destParams.set("status",  status);
-      if (user_id) destParams.set("user_id", user_id);
-      const qs = destParams.toString();
-      TARGET_URL = baseUrl + (qs ? "?" + qs : "");
+      var baseUrl  = REDIRECT_MAP[key][os];
+      var qsParts  = [];
+      if (status)  { qsParts.push("status="  + encodeURIComponent(status)); }
+      if (user_id) { qsParts.push("user_id=" + encodeURIComponent(user_id)); }
+      TARGET_URL = baseUrl + (qsParts.length ? "?" + qsParts.join("&") : "");
     }
+    // ──────────────────────────────────────────────────────────────
 
-    // Gán meta refresh động (backup khi JS chậm)
-    const meta = document.createElement("meta");
+    // ── META REFRESH (backup khi JS chậm) ────────────────────────
+    var meta = document.createElement("meta");
     meta.httpEquiv = "refresh";
-    meta.content   = `${SECONDS};url=${TARGET_URL}`;
+    meta.content   = SECONDS + ";url=" + TARGET_URL;
     document.head.appendChild(meta);
+    // ──────────────────────────────────────────────────────────────
 
-    // Cập nhật UI
-    document.getElementById("destUrl").textContent = TARGET_URL;
-    document.getElementById("goBtn").href = TARGET_URL;
-
-    // Cập nhật tiêu đề theo loại redirect
-    const labels = { ekyc: "eKYC", email: "Email" };
+    // ── UPDATE UI ─────────────────────────────────────────────────
+    var labels = { ekyc: "eKYC", email: "Email" };
     if (labels[key]) {
-      document.querySelector("h1").textContent = `Đang chuyển hướng ${labels[key]}…`;
+      document.getElementById("pageTitle").textContent =
+        "Đang chuyển hướng " + labels[key] + "\u2026";
     }
 
-    // Hiển thị badge OS
-    const osBadge = document.getElementById("osBadge");
-    const osIcon  = isIOS ? "🍎" : isAndroid ? "🤖" : "💻";
-    const osLabel = isIOS ? "iOS" : isAndroid ? "Android" : "Desktop";
-    osBadge.textContent = `${osIcon} ${osLabel}`;
+    document.getElementById("destUrl").textContent = TARGET_URL;
+    document.getElementById("goBtn").href          = TARGET_URL;
+
+    var osBadge = document.getElementById("osBadge");
+    var osIcon  = isIOS ? "\uD83C\uDF4E" : (isAndroid ? "\uD83E\uDD16" : "\uD83D\uDCBB");
+    var osLabel = isIOS ? "iOS" : (isAndroid ? "Android" : "Desktop");
+    osBadge.textContent   = osIcon + " " + osLabel;
     osBadge.style.display = "inline-block";
+    // ──────────────────────────────────────────────────────────────
 
-    // Đếm ngược
-    let remaining = SECONDS;
-    const counter = document.getElementById("counter");
+    // ── COUNTDOWN ─────────────────────────────────────────────────
+    var remaining = SECONDS;
+    var counter   = document.getElementById("counter");
 
-    const tick = setInterval(() => {
-      remaining--;
+    var tick = setInterval(function() {
+      remaining = remaining - 1;
       counter.textContent = remaining;
       if (remaining <= 0) {
         clearInterval(tick);
         window.location.href = TARGET_URL;
       }
     }, 1000);
+    // ──────────────────────────────────────────────────────────────
   </script>
 </body>
 </html>
