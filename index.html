@@ -89,6 +89,18 @@
     }
     .icon-wrap svg { width: 28px; height: 28px; }
 
+    /* ── OS BADGE ── */
+    .os-badge {
+      font-size: .78rem; font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      margin-bottom: 20px;
+      letter-spacing: .03em;
+    }
+
     /* ── TEXT ── */
     h1 {
       font-size: 1.45rem; font-weight: 700;
@@ -192,6 +204,9 @@
     <h1>Đang chuyển hướng…</h1>
     <p class="subtitle">Bạn sẽ được chuyển đến trang đích trong giây lát.<br/>Vui lòng chờ hoặc nhấn nút bên dưới.</p>
 
+    <!-- OS Badge -->
+    <div id="osBadge" class="os-badge" style="display:none"></div>
+
     <!-- Destination badge -->
     <div class="destination">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
@@ -227,14 +242,27 @@
 
   <script>
     // ── BẢNG REDIRECT ─────────────────────────────────────────────
-    // Chỉ lưu base URL, các param sẽ được ghép động từ URL truy cập
+    // Base URL riêng cho từng OS
     const REDIRECT_MAP = {
-      "ekyc":  "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect",
-      "email": "https://dev-link.dinhcunuocngoai.com.vn/email-redirect",
+      "ekyc": {
+        android: "https://dev-link.dinhcunuocngoai.com.vn/kyc-redirect",
+        ios:     "myapp:///kyc-redirect",
+      },
+      "email": {
+        android: "https://dev-link.dinhcunuocngoai.com.vn/email-redirect",
+        ios:     "myapp:///email-redirect",
+      },
     };
 
     const SECONDS  = 5;
     const FALLBACK = "https://autumn-droid.github.io/";   // Không có param hợp lệ
+    // ──────────────────────────────────────────────────────────────
+
+    // ── DETECT OS ─────────────────────────────────────────────────
+    const ua = navigator.userAgent || "";
+    const isIOS     = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/.test(ua);
+    const os        = isIOS ? "ios" : "android";   // mặc định android cho các OS khác
     // ──────────────────────────────────────────────────────────────
 
     // Đọc các param từ URL hiện tại
@@ -244,14 +272,15 @@
     const status  = params.get("status");
     const user_id = params.get("user_id");
 
-    // Ghép URL đích + forward các param (status, user_id) nếu có
+    // Ghép URL đích theo OS + forward param (status, user_id) nếu có
     let TARGET_URL = FALLBACK;
     if (REDIRECT_MAP[key]) {
+      const baseUrl    = REDIRECT_MAP[key][os];
       const destParams = new URLSearchParams();
       if (status)  destParams.set("status",  status);
       if (user_id) destParams.set("user_id", user_id);
       const qs = destParams.toString();
-      TARGET_URL = REDIRECT_MAP[key] + (qs ? "?" + qs : "");
+      TARGET_URL = baseUrl + (qs ? "?" + qs : "");
     }
 
     // Gán meta refresh động (backup khi JS chậm)
@@ -269,6 +298,13 @@
     if (labels[key]) {
       document.querySelector("h1").textContent = `Đang chuyển hướng ${labels[key]}…`;
     }
+
+    // Hiển thị badge OS
+    const osBadge = document.getElementById("osBadge");
+    const osIcon  = isIOS ? "🍎" : isAndroid ? "🤖" : "💻";
+    const osLabel = isIOS ? "iOS" : isAndroid ? "Android" : "Desktop";
+    osBadge.textContent = `${osIcon} ${osLabel}`;
+    osBadge.style.display = "inline-block";
 
     // Đếm ngược
     let remaining = SECONDS;
